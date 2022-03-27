@@ -57,10 +57,6 @@ function run() {
     else timer.el.innerHTML = `${minutes}:${seconds}`;
 
     if(hours <= 0 && minutes <= 0 && seconds <= 0) clearInterval(timer.interval);
-
-    console.log('sekunden:', typeof seconds);
-    console.log ('minuten:', typeof minutes)
-    console.log('');
 }
 
 function reset() {

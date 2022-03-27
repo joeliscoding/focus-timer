@@ -7,12 +7,18 @@
     <title>Focus Timer</title>
     <link rel="stylesheet" href="assets/css/all.min.css">
     <link rel="stylesheet" href="assets/css/fontawesome.min.css">
+    <link rel="stylesheet" href="assets/css/googlefonts.css">
     <link rel="stylesheet" href="assets/css/main.css">
 </head>
 <body>
     <form>
         <input type="tel" id="hours" placeholder="hours" value="0" maxlength="2">
+        <label for="hours">hours</label>
+        <br>
+        
         <input type="tel" id="minutes" placeholder="minutes" value="30" maxlength="2">
+        <label for="minutes">minutes</label>
+        <br>
         <button type="button" onclick="if(isSetup === false){insertTime()}">start</button>
     </form>
     <p id="error-message"></p>
