@@ -13,10 +13,9 @@
     <form>
         <input type="tel" id="hours" placeholder="hours" value="0" maxlength="2">
         <input type="tel" id="minutes" placeholder="minutes" value="30" maxlength="2">
-        <input type="tel" id="seconds" placeholder="seconds" value="0" maxlength="2">
-        <button type="button" onclick="if(isSetup === false){insertTime(); isSetup = true;}">start</button>
+        <button type="button" onclick="if(isSetup === false){insertTime()}">start</button>
     </form>
-    <p id="error"></p>
+    <p id="error-message"></p>
     <p id="timer"></p>
     <div id="session">
         

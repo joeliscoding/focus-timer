@@ -2,3 +2,11 @@ body {
     margin: 0;
     padding: 0;
 }
+
+#error-message {
+    transition: all 200ms;
+}
+
+#timer {
+    padding: 50px;
+}
