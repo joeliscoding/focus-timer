@@ -1,6 +1,11 @@
 let hours, minutes, seconds;
 let insertedHours, insertedMinutes;
-let isSetup = false;
+let breaks = {
+    bool: false,
+    when: 30,
+    duration: 10
+}
+let isSetup = false, wasReseted = false;
 const errorMessage = document.getElementById('error-message');
 const timer = {
     el: document.getElementById('timer'),
@@ -17,6 +22,7 @@ function insertTime() {
     else minutes = 0;
     seconds = 0;
     if((hours > 0 || minutes > 0 || seconds > 0) && minutes < 60 && seconds < 60) {
+        setBreaks();
         setup();
         insertedHours = hours;
         insertedSeconds = seconds;
@@ -29,7 +35,7 @@ function insertTime() {
 
 function setup() {
     if(seconds < 10 && typeof seconds != 'string') seconds = '0' + seconds;
-    if(minutes < 10 && typeof minutes != 'string') minutes = '0' + minutes;
+    if(minutes < 10 && wasReseted != true) minutes = '0' + minutes;
     if(hours > 0) {timer.el.innerHTML = `${hours}:${minutes}:${seconds}`;}
     else {timer.el.innerHTML = `${minutes}:${seconds}`;}
     session.innerHTML += `
@@ -38,6 +44,8 @@ function setup() {
     <button type="button" onclick="if(timer.run === true){clearInterval(timer.interval); timer.run = false;} hours = insertedHours; minutes = insertedMinutes; seconds = 0; reset()"><i class="fa-solid fa-arrow-rotate-left"></i></button>
     
     `;
+
+
 }
 
 function run() {
@@ -62,5 +70,13 @@ function run() {
 function reset() {
     session.innerHTML = '';
     timer.el.innerHTML = '';
+    wasReseted = true;
     setup();
+}
+
+function setBreaks() {
+    let totalTime = hours * 60 + minutes;
+    if(totalTime > 35) {
+        console.log("pause benötigt")
+    }
 }

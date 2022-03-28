@@ -43,6 +43,12 @@ button {
     width: 75px;
     height: 30px;
     margin: 10px 5px;
+    transition: all 500ms;
+}
+
+button:hover {
+    opacity: .6;
+    cursor: pointer;
 }
 
 #error-message {
@@ -50,5 +56,5 @@ button {
 }
 
 #timer {
-    padding: 50px;
+    font-size: 50px;
 }
