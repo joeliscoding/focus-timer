@@ -9,7 +9,7 @@ let breaks = {
 let isSetup = false, wasReseted = false;
 let restTime;
 let breakNeeded = false;
-const timeTillBreak = 35, breakDuration = 10; //Angaben in Minuten
+const timeTillBreak = 35; //Angaben in Minuten
 const errorMessage = document.getElementById('error-message');
 const timer = {
     el: document.getElementById('timer'),
@@ -47,9 +47,9 @@ function setup() {
     if(hours > 0) {timer.el.innerHTML = `${hours}:${minutes}:${seconds}`;}
     else {timer.el.innerHTML = `${minutes}:${seconds}`;}
     session.innerHTML += `
-    <button id="play-pause-button" type="button" onclick="if(timer.run === false){timer.interval = setInterval(run, 1000); timer.run = true;}"><i class="fa-solid fa-play"></i></button>
-    <button type="button" onclick="if(timer.run === true){clearInterval(timer.interval); timer.run = false;}"><i class="fa-solid fa-pause"></i></button>
-    <button type="button" onclick="if(timer.run === true){clearInterval(timer.interval); timer.run = false;} hours = insertedHours; minutes = insertedMinutes; seconds = 0; reset()"><i class="fa-solid fa-arrow-rotate-left"></i></button>
+    <button id="play-pause-button" type="button" onclick="if(timer.run === false){timer.interval = setInterval(run, 10); timer.run = true; if(breakNeeded === true){breakTimer.interval = setInterval(runBreakTimer, 10);}}"><i class="fa-solid fa-play"></i></button>
+    <button type="button" onclick="if(timer.run === true){clearInterval(timer.interval); timer.run = false; clearInterval(breakTimer.interval);}"><i class="fa-solid fa-pause"></i></button>
+    <button type="button" onclick="if(timer.run === true){clearInterval(timer.interval); timer.run = false; clearInterval(breakTimer.interval);} hours = insertedHours; minutes = insertedMinutes; seconds = 0; reset()"><i class="fa-solid fa-arrow-rotate-left"></i></button>
     
     `;
 
@@ -79,11 +79,12 @@ function run() {
 }
 
 function runBreakTimer() {
-    if(seconds < 0 && breakMinutes > 0) {
-        seconds = 59;
+    //console.log(seconds, breakMinutes);
+    console.log(breakMinutes);
+    if(parseInt(seconds) < 0 && breakMinutes > 0) {
         breakMinutes--;
     }
-    breakTimer.el.innerHTML = `${minutes}:${seconds}`;
+    breakTimer.el.innerHTML = `${breakMinutes}:${seconds}`;
     if(breakMinutes <= 0 && seconds <= 0 && breaks.amount > 0 && breaks.bool === false) {
         breaks.bool = true;
         breakMinutes = breaks.duration;
@@ -93,7 +94,7 @@ function runBreakTimer() {
         breaks.amount--;
         breakMinutes = timeTillBreak;
     }
-    else {
+    else if(breakMinutes <= 0 && seconds <= 0 && breaks.amount <= 0) {
         clearInterval(breakTimer.interval);
     }
 }
@@ -102,6 +103,7 @@ function reset() {
     session.innerHTML = '';
     timer.el.innerHTML = '';
     wasReseted = true;
+    setBreak();
     setup();
 }
 
@@ -111,6 +113,7 @@ function setBreak() {
     restTime = totalTime;
     if(totalTime > timeTillBreak) {
         //console.log("pause benötigt");
+        breakNeeded = true;
         while(restTime > timeTillBreak) {
             restTime -= timeTillBreak;
             breaks.amount++;
@@ -119,12 +122,11 @@ function setBreak() {
         //console.log(totalTime);
         //console.log(restTime, 'Minuten zeit nach letzter Pause');
 
-        timeWithBreak += breaks.amount * breakDuration;
+        if(wasReseted != true) timeWithBreak += breaks.amount * breaks.duration;
         hours = parseInt(timeWithBreak / 60);
         minutes = timeWithBreak % 60;
         breakMinutes = timeTillBreak;
         breakTimer.el.innerHTML = `${breakMinutes}:${seconds}0`;
-        //breakTimer.interval = setInterval(runBreakTimer, 1000);
         
 
     }
