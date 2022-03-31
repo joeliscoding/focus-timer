@@ -9,6 +9,7 @@ let breaks = {
 let isSetup = false, wasReseted = false;
 let restTime;
 let breakNeeded = false;
+let minutesAtBreakTimer;
 const timeTillBreak = 35; //Angaben in Minuten
 const errorMessage = document.getElementById('error-message');
 const timer = {
@@ -47,7 +48,7 @@ function setup() {
     if(hours > 0) {timer.el.innerHTML = `${hours}:${minutes}:${seconds}`;}
     else {timer.el.innerHTML = `${minutes}:${seconds}`;}
     session.innerHTML += `
-    <button id="play-pause-button" type="button" onclick="if(timer.run === false){timer.interval = setInterval(run, 10); timer.run = true; if(breakNeeded === true){breakTimer.interval = setInterval(runBreakTimer, 10);}}"><i class="fa-solid fa-play"></i></button>
+    <button id="play-pause-button" type="button" onclick="if(timer.run === false){timer.interval = setInterval(run, 1000); timer.run = true; if(breakNeeded === true){breakTimer.interval = setInterval(runBreakTimer, 1000);}}"><i class="fa-solid fa-play"></i></button>
     <button type="button" onclick="if(timer.run === true){clearInterval(timer.interval); timer.run = false; clearInterval(breakTimer.interval);}"><i class="fa-solid fa-pause"></i></button>
     <button type="button" onclick="if(timer.run === true){clearInterval(timer.interval); timer.run = false; clearInterval(breakTimer.interval);} hours = insertedHours; minutes = insertedMinutes; seconds = 0; reset()"><i class="fa-solid fa-arrow-rotate-left"></i></button>
     
@@ -74,25 +75,33 @@ function run() {
 
     if(hours <= 0 && minutes <= 0 && seconds <= 0) {
         clearInterval(timer.interval);
-        new Audio('/assets/sounds/ringtone.webm').play();
+        new Audio('/assets/sounds/ringtone-end.webm').play();
     }
 }
 
 function runBreakTimer() {
-    //console.log(seconds, breakMinutes);
-    console.log(breakMinutes);
-    if(parseInt(seconds) < 0 && breakMinutes > 0) {
+
+    if(seconds == 59 && breakMinutes > 0 && minutes != minutesAtBreakTimer) {
         breakMinutes--;
+        minutesAtBreakTimer = parseInt(minutes)
     }
     breakTimer.el.innerHTML = `${breakMinutes}:${seconds}`;
     if(breakMinutes <= 0 && seconds <= 0 && breaks.amount > 0 && breaks.bool === false) {
         breaks.bool = true;
         breakMinutes = breaks.duration;
+        new Audio('/assets/sounds/ringtone-pause-start.webm').play();
     }
-    else if(breakMinutes <= 0 && seconds <= 0 && breaks.amount > 0 && breaks.bool === true) {
+    else if(breakMinutes <= 0 && seconds <= 0 && breaks.amount > 1 && breaks.bool === true) {
         breaks.bool = false;
         breaks.amount--;
         breakMinutes = timeTillBreak;
+        new Audio('/assets/sounds/ringtone-pause-end.webm').play();
+    }
+    else if(breakMinutes <= 0 && seconds <= 0 && breaks.amount == 1 && breaks.bool === true) {
+        breaks.bool = false;
+        breaks.amount--;
+        breakMinutes = minutes;
+        new Audio('/assets/sounds/ringtone-pause-end.webm').play();
     }
     else if(breakMinutes <= 0 && seconds <= 0 && breaks.amount <= 0) {
         clearInterval(breakTimer.interval);
@@ -103,6 +112,7 @@ function reset() {
     session.innerHTML = '';
     timer.el.innerHTML = '';
     wasReseted = true;
+    minutesAtBreakTimer = null;
     setBreak();
     setup();
 }
