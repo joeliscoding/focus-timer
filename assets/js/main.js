@@ -48,7 +48,7 @@ function setup() {
     if(hours > 0) {timer.el.innerHTML = `${hours}:${minutes}:${seconds}`;}
     else {timer.el.innerHTML = `${minutes}:${seconds}`;}
     session.innerHTML += `
-    <button id="play-pause-button" type="button" onclick="if(timer.run === false){timer.interval = setInterval(run, 1000); timer.run = true; if(breakNeeded === true){breakTimer.interval = setInterval(runBreakTimer, 1000);}}"><i class="fa-solid fa-play"></i></button>
+    <button id="play-pause-button" type="button" onclick="if(timer.run === false){timer.interval = setInterval(run, 1000); timer.run = true; if(breakNeeded === true){breakTimer.interval = setInterval(runBreakTimer, 500);}}"><i class="fa-solid fa-play"></i></button>
     <button type="button" onclick="if(timer.run === true){clearInterval(timer.interval); timer.run = false; clearInterval(breakTimer.interval);}"><i class="fa-solid fa-pause"></i></button>
     <button type="button" onclick="if(timer.run === true){clearInterval(timer.interval); timer.run = false; clearInterval(breakTimer.interval);} hours = insertedHours; minutes = insertedMinutes; seconds = 0; reset()"><i class="fa-solid fa-arrow-rotate-left"></i></button>
     
