@@ -11,22 +11,34 @@
     <link rel="stylesheet" href="assets/css/main.css">
 </head>
 <body>
-    <form>
-        <input type="tel" id="hours" placeholder="hours" value="0" maxlength="2">
-        <label for="hours">hours</label>
-        <br>
-        
-        <input type="tel" id="minutes" placeholder="minutes" value="30" maxlength="2">
-        <label for="minutes">minutes</label>
-        <br>
-        <button type="button" onclick="if(isSetup === false){insertTime()}">start</button>
-    </form>
-    <p id="error-message"></p>
-    <p id="timer"></p>
-    <p id="break-timer"></p>
-    <div id="session">
-        
-    </div>
+    <h1>HALLO</h1>
+    <section id="countdown">
+        <form id="countdown-form">
+            <input type="tel" id="hours" placeholder="hours" value="0" maxlength="2">
+            <label for="hours">hours</label>
+            <br>
+            
+            <input type="tel" id="minutes" placeholder="minutes" value="30" maxlength="2">
+            <label for="minutes">minutes</label>
+            <br>
+            <button class="text-button" type="button" onclick="if(isSetup === false){insertTime()}">start</button>
+        </form>
+        <p id="error-message" style="display: none;"></p>
+        <p id="timer"></p>
+        <p id="break-timer"></p>
+        <div id="session"></div>
+    </section>
+
+    <section id="todo-list">
+        <input type="text" id="new-todo" placeholder="new task">
+        <button class="icon-button" type="button" onClick="addTask()"><i class="fa-solid fa-plus"></i></button>
+        <div id="todo-unfinished" style="display: none;">
+            <h2>to do</h2>
+        </div>
+        <div id="todo-finished" style="display: none;">
+            <h2>finished</h2>
+        </div>
+    </section>
 
     <script src="assets/js/main.js"></script>
 </body>

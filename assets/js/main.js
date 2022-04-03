@@ -22,7 +22,23 @@ const breakTimer = {
     interval: 0
 }
 const session = document.getElementById('session');
+const countdownForm = document.getElementById('countdown-form');
 
+
+let task;
+const todoList = {
+    unfinished: document.getElementById('todo-unfinished'),
+    finished: document.getElementById('todo-finished'),
+    amountUnfinished: 0,
+    amountFinished: 0
+}
+let unfinishedTasks = []
+//let finishedTasks = {}
+
+
+
+
+// Countdown
 
 function insertTime() {
     if(document.getElementById('hours').value > 0) hours = document.getElementById('hours').value;
@@ -38,19 +54,24 @@ function insertTime() {
         insertedMinutes = minutes;
         isSetup = true;
         errorMessage.innerHTML = '';
+        errorMessage.style.display = 'none'
     }
-    else errorMessage.innerHTML = 'Something went wrong. Please check your entries.';
+    else {
+        errorMessage.style.display = 'block'
+        errorMessage.innerHTML = 'Something went wrong. Please check your entries.';
+    }
 }
 
 function setup() {
+    countdownForm.style.display = 'none';
     if(seconds < 10 && typeof seconds != 'string') seconds = '0' + seconds;
     if(minutes < 10 && wasReseted != true) minutes = '0' + minutes;
     if(hours > 0) {timer.el.innerHTML = `${hours}:${minutes}:${seconds}`;}
     else {timer.el.innerHTML = `${minutes}:${seconds}`;}
     session.innerHTML += `
-    <button id="play-pause-button" type="button" onclick="if(timer.run === false){timer.interval = setInterval(run, 1000); timer.run = true; if(breakNeeded === true){breakTimer.interval = setInterval(runBreakTimer, 500);}}"><i class="fa-solid fa-play"></i></button>
-    <button type="button" onclick="if(timer.run === true){clearInterval(timer.interval); timer.run = false; clearInterval(breakTimer.interval);}"><i class="fa-solid fa-pause"></i></button>
-    <button type="button" onclick="if(timer.run === true){clearInterval(timer.interval); timer.run = false; clearInterval(breakTimer.interval);} hours = insertedHours; minutes = insertedMinutes; seconds = 0; reset()"><i class="fa-solid fa-arrow-rotate-left"></i></button>
+    <button class="icon-button" type="button" onclick="if(timer.run === false){timer.interval = setInterval(run, 1000); timer.run = true; if(breakNeeded === true){breakTimer.interval = setInterval(runBreakTimer, 500);}}"><i class="fa-solid fa-play"></i></button>
+    <button class="icon-button" type="button" onclick="if(timer.run === true){clearInterval(timer.interval); timer.run = false; clearInterval(breakTimer.interval);}"><i class="fa-solid fa-pause"></i></button>
+    <button class="icon-button" type="button" onclick="if(timer.run === true){clearInterval(timer.interval); timer.run = false; clearInterval(breakTimer.interval);} hours = insertedHours; minutes = insertedMinutes; seconds = 0; reset()"><i class="fa-solid fa-arrow-rotate-left"></i></button>
     
     `;
 
@@ -122,15 +143,12 @@ function setBreak() {
     let timeWithBreak = totalTime;
     restTime = totalTime;
     if(totalTime > timeTillBreak) {
-        //console.log("pause benötigt");
+
         breakNeeded = true;
         while(restTime > timeTillBreak) {
             restTime -= timeTillBreak;
             breaks.amount++;
         }
-        //console.log(breaks.amount, 'mal Pause');
-        //console.log(totalTime);
-        //console.log(restTime, 'Minuten zeit nach letzter Pause');
 
         if(wasReseted != true) timeWithBreak += breaks.amount * breaks.duration;
         hours = parseInt(timeWithBreak / 60);
@@ -138,10 +156,28 @@ function setBreak() {
         breakMinutes = timeTillBreak;
         breakTimer.el.innerHTML = `${breakMinutes}:${seconds}0`;
         
-
     }
-    //console.log(timeWithBreak)
-    //console.log(timeWithBreak);
-    //console.log(parseInt(timeWithBreak / 60));
-    //console.log(timeWithBreak % 60);
+}
+
+
+
+// ToDo List
+
+function addTask() {
+    if(document.getElementById('new-todo').value && unfinishedTasks.includes(document.getElementById('new-todo').value) === false) {
+        task = document.getElementById('new-todo').value;
+        todoList.unfinished.innerHTML += `<p>${task}</p><button class="todo-button"><i class="fa-solid fa-check"></i></button><button class="todo-button"><i class="fa-solid fa-trash"></i></button>`;
+        unfinishedTasks.push(task);
+        
+        if(todoList.amountUnfinished <= 0)todoList.unfinished.style.display = 'block';
+        todoList.amountUnfinished++;
+
+
+
+
+        //const fruits = ["Banana", "Orange", "Apple", "Mango"];
+        //console.log(fruits.includes("Mango"));
+    }
+
+    
 }
